@@ -1,1 +1,1 @@
-# chess-reinforcement-learning-algorithm
+# A basic Chess Reinforcement Learning Algorithm
