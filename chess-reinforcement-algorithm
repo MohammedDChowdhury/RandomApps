@@ -1,0 +1,46 @@
+const chess = require("chess.js");
+
+// Initialize the board
+let board = new chess.Chess();
+
+// Set the number of games to play
+let numGames = 1000;
+
+// Set the learning rate
+let alpha = 0.1;
+
+// Initialize a map to store the rewards for each possible move
+let moveRewards = new Map();
+
+// Play the specified number of games
+for (let game = 0; game < numGames; game++) {
+  while (!board.game_over()) {
+    // Get the list of legal moves
+    let legalMoves = board.moves();
+
+    // Select a move at random
+    let move = legalMoves[Math.floor(Math.random() * legalMoves.length)];
+
+    // Make the move
+    board.move(move);
+
+    // Update the rewards for the selected move
+    if (moveRewards.has(move)) {
+      moveRewards.set(
+        move,
+        moveRewards.get(move) + alpha * (1 - moveRewards.get(move))
+      );
+    } else {
+      moveRewards.set(move, alpha);
+    }
+  }
+
+  // Reset the board for the next game
+  board.reset();
+}
+
+// Sort the moves by their rewards
+let sortedMoves = [...moveRewards.entries()].sort((a, b) => b[1] - a[1]);
+
+// Print the top 5 moves
+console.log(sortedMoves.slice(0, 5));
